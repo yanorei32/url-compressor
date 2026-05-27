@@ -1,8 +1,11 @@
 # URL Compressor
-「URLが圧縮されていればDiscordの文字数制限にひっかからなかったのに…」
 
-そんなこと、ありませんか？
+“If only the URL had been compressed, it wouldn’t have hit Discord’s character limit…”
 
-そんなときに！URL Compressor！
+Ever had that happen?
 
-zstdで圧縮したのち、base32768でエンコードすることで、文字数あたりの情報量を最適化します！
+That’s when you need URL Compressor.
+
+It compresses URLs with zstd, then encodes them using base32768, maximizing the amount of information per character.
+
+Official instance: https://urlc.yr32.net/
