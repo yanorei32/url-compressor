@@ -19,6 +19,12 @@
         width: 100%;
         font-size: 150%;
       }
+      .worst {
+        color: darkred;
+      }
+      .good {
+        color: darkgreen;
+      }
     </style>
   </head>
   <body>
@@ -29,6 +35,7 @@
       <input type=text id=original placeholder=https://example.com/><br>
       <label for=compressed>Compressed:</label><br>
       <input type=text id=compressed readonly>
+      Compression Ratio: <span id=ratio>-</span> %
     </div>
     <div class=container id=jumpPage hidden>
       <h1 id=jumpPageTitle>Loading</h1>
@@ -45,8 +52,13 @@
       }
 
       function update() {
-        document.getElementById('compressed').value =
-          `${location.href}#${wasm.encode(document.getElementById('original').value)}`;
+        const original = document.getElementById('original').value;
+        const encoded = `${location.href}#${wasm.encode(original)}`;
+        document.getElementById('compressed').value = encoded;
+        const ratio = encoded.length / original.length;
+        document.getElementById('ratio').textContent = (ratio * 100).toFixed(2);
+        document.getElementById('ratio').classList.add(ratio < 1 ? "good" : "worst");
+        document.getElementById('ratio').classList.remove(ratio >= 1 ? "good" : "worst");
       }
 
       async function run() {
