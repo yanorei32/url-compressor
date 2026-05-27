@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>URL Compressor</title>
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <style>
+      html, body {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        border: 0;
+      }
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+      }
+      input {
+        width: 100%;
+        font-size: 150%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class=container>
+      <h1>URL Compressor</h1>
+      <p>URLを圧縮します。Discordへの貼り付けなどにどうぞ。zstd (level:20)→base32768</p>
+      <label for=original>Original:</label><br>
+      <input type=text id=original placeholder=https://example.com/><br>
+      <label for=compressed>Compressed:</label><br>
+      <input type=text id=compressed readonly>
+    </div>
+    <script type="module">
+      import init, * as wasm from './pkg/url_compressor.js';
+
+      function update() {
+        document.getElementById('compressed').value =
+          `${location.href}#${wasm.encode(document.getElementById('original').value)}`;
+      }
+
+      async function run() {
+        await init();
+
+        if (location.hash !== "") {
+          const url = wasm.decode(decodeURIComponent(location.hash.slice(1)));
+
+          if (['http:', 'https:'].includes(URL.parse(url).protocol)) {
+            location.href = url;
+          }
+
+          return;
+        }
+
+        update();
+        document.getElementById('original').addEventListener('change', update);
+        document.getElementById('original').addEventListener('keydown', update);
+      }
+
+      run();
+    </script>
+  </body>
+</html>

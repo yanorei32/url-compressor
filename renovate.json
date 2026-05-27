@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "config:recommended",
+    ":semanticCommitsDisabled",
+    "https://github.com/arkedge/renovate-config/raw/main/rust-toolchain.json5"
+  ]
+}

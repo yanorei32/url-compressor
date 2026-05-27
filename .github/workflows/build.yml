@@ -1,0 +1,28 @@
+name: build
+
+on:
+  pull_request:
+    paths:
+      - 'build.sh'
+      - '.github/workflows/build.yml'
+
+env:
+  RUST_CACHE_VERSION: v1
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - uses: Swatinem/rust-cache@v2.9.1
+        with:
+          prefix-key: ${{ env.RUST_CACHE_VERSION }}-rust
+
+      - name: Build
+        run: |
+          cargo install wasm-pack
+          wasm-pack build --target web
+          tar cvf static.tar static/
