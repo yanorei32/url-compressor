@@ -1,6 +1,6 @@
 [package]
 name = "url-compressor"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["yanorei32 <yanorei@hotmail.co.jp>"]
 edition = "2024"
 repository = "https://github.com/yanorei32/url-compressor"
