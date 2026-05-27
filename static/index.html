@@ -22,7 +22,7 @@
     </style>
   </head>
   <body>
-    <div class=container>
+    <div class=container id=compressor>
       <h1>URL Compressor</h1>
       <p>URLを圧縮します。Discordへの貼り付けなどにどうぞ。zstd (level:20)→base32768</p>
       <label for=original>Original:</label><br>
@@ -30,8 +30,19 @@
       <label for=compressed>Compressed:</label><br>
       <input type=text id=compressed readonly>
     </div>
-    <script type="module">
+    <div class=container id=jumpPage hidden>
+      <h1 id=jumpPageTitle>Loading</h1>
+      <button id=openButton hidden></button>
+      <br/>
+      <a href=./>return</a>
+    </div>
+    <script type=module>
       import init, * as wasm from './pkg/url_compressor.js';
+
+      if (location.hash !== '') {
+        document.getElementById('compressor').hidden = true;
+        document.getElementById('jumpPage').hidden = false;
+      }
 
       function update() {
         document.getElementById('compressed').value =
@@ -41,14 +52,22 @@
       async function run() {
         await init();
 
-        if (location.hash !== "") {
+        if (location.hash !== '') {
           const url = wasm.decode(decodeURIComponent(location.hash.slice(1)));
+          const protocol = URL.parse(url).protocol;
 
-          if (['http:', 'https:'].includes(URL.parse(url).protocol)) {
+          if (['http:', 'https:'].includes(protocol)) {
+            document.getElementById('jumpPageTitle').textContent = 'Jump now!';
+
             location.href = url;
-          }
+          } else {
+            document.getElementById('jumpPageTitle').textContent = 'Decoded!';
 
-          return;
+            const openButton = document.getElementById('openButton');
+            openButton.textContent = `Open (URI protocol is ${protocol} )`;
+            openButton.onclick = () => location.href = url;
+            openButton.hidden = false;
+          }
         }
 
         update();
