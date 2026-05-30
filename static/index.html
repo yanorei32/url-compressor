@@ -61,26 +61,38 @@
         document.getElementById('ratio').classList.remove(ratio >= 1 ? "good" : "worst");
       }
 
+      function handleHash() {
+        if (location.hash === '')
+          return;
+
+        document.getElementById('compressor').hidden = true;
+        document.getElementById('jumpPage').hidden = false;
+        document.getElementById('jumpPageTitle').textContent = 'Loading';
+        const openButton = document.getElementById('openButton');
+        openButton.hidden = true;
+        openButton.onclick = null;
+
+        const url = wasm.decode(decodeURIComponent(location.hash.slice(1)));
+        const protocol = URL.parse(url).protocol;
+
+        if (['http:', 'https:'].includes(protocol)) {
+          document.getElementById('jumpPageTitle').textContent = 'Jump now!';
+
+          location.href = url;
+        } else {
+          document.getElementById('jumpPageTitle').textContent = 'Decoded!';
+
+          openButton.textContent = `Open (URI protocol is ${protocol} )`;
+          openButton.onclick = () => location.href = url;
+          openButton.hidden = false;
+        }
+      }
+
       async function run() {
         await init();
 
-        if (location.hash !== '') {
-          const url = wasm.decode(decodeURIComponent(location.hash.slice(1)));
-          const protocol = URL.parse(url).protocol;
-
-          if (['http:', 'https:'].includes(protocol)) {
-            document.getElementById('jumpPageTitle').textContent = 'Jump now!';
-
-            location.href = url;
-          } else {
-            document.getElementById('jumpPageTitle').textContent = 'Decoded!';
-
-            const openButton = document.getElementById('openButton');
-            openButton.textContent = `Open (URI protocol is ${protocol} )`;
-            openButton.onclick = () => location.href = url;
-            openButton.hidden = false;
-          }
-        }
+        handleHash();
+        window.addEventListener('hashchange', handleHash);
 
         update();
         document.getElementById('original').addEventListener('change', update);
