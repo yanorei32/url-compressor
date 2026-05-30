@@ -39,9 +39,10 @@
     </div>
     <div class=container id=jumpPage hidden>
       <h1 id=jumpPageTitle>Loading</h1>
+      <pre id=decoded></pre>
       <button id=openButton hidden></button>
       <br/>
-      <a href=./>return</a>
+      <a href=./>Return to URL Compressor</a>
     </div>
     <script type=module>
       import init, * as wasm from './pkg/url_compressor.js';
@@ -73,15 +74,17 @@
         openButton.onclick = null;
 
         const url = wasm.decode(decodeURIComponent(location.hash.slice(1)));
-        const protocol = URL.parse(url).protocol;
+        document.getElementById('jumpPageTitle').textContent = 'Decoded!';
+        document.getElementById('decoded').textContent = url;
+
+        const protocol = URL.parse(url)?.protocol;
 
         if (['http:', 'https:'].includes(protocol)) {
-          document.getElementById('jumpPageTitle').textContent = 'Jump now!';
-
-          location.href = url;
+          document.getElementById('jumpPageTitle').textContent = 'Jump in 3 seconds!';
+          setTimeout(() => location.href = url, 3000);
+        } else if (['javascript:'].includes(protocol)) {
+          // do nothing
         } else {
-          document.getElementById('jumpPageTitle').textContent = 'Decoded!';
-
           openButton.textContent = `Open (URI protocol is ${protocol} )`;
           openButton.onclick = () => location.href = url;
           openButton.hidden = false;
