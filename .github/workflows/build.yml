@@ -2,9 +2,6 @@ name: build
 
 on:
   pull_request:
-    paths:
-      - 'build.sh'
-      - '.github/workflows/build.yml'
 
 env:
   RUST_CACHE_VERSION: v1
