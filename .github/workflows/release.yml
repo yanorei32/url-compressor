@@ -31,7 +31,7 @@ jobs:
           tar cvhf static.tar.gz static/
 
       - name: pre-release
-        uses: softprops/action-gh-release@v3.0.2
+        uses: softprops/action-gh-release@v3.0.3
         if: "! startsWith(github.ref, 'refs/tags/')"
         with:
           tag_name: master-${{ github.sha }}
@@ -41,7 +41,7 @@ jobs:
             *.tar.gz
 
       - name: tagged-release
-        uses: softprops/action-gh-release@v3.0.2
+        uses: softprops/action-gh-release@v3.0.3
         if: startsWith(github.ref, 'refs/tags/')
         with:
           fail_on_unmatched_files: true
